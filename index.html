@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Cherchez parmi plus de 1500 recettes du quotidien, simples et délicieuses." />
+    <title>Les Petits Plats</title>
+
+    <link rel="prefetch" href="/src/assets/Logo.png" />
+    <link rel="prefetch" href="/src/assets/img/hero-background.jpg" />
+    <link rel="stylesheet" href="/src/css/output.css" />
+  </head>
+  <body class="bg-neutral-300">
+    <header
+      class="relative bg-neutral-900 px-4 sm:px-8 py-12 min-h-[60dvh] text-white isolate grid gap-8 place-items-center text-center overflow-hidden">
+      <!-- Logo -->
+      <div class="absolute top-6 left-4 sm:top-10 sm:left-10 w-32 sm:w-48">
+        <img
+          src="/src/assets/Logo.png"
+          alt="Logo Les Petits Plats"
+          class="w-full h-auto object-contain"
+          loading="lazy" />
+      </div>
+
+      <!-- Contenu principal -->
+      <div
+        class="relative z-10 max-w-2xl w-full flex flex-col items-center gap-6 mt-16 sm:mt-28 px-2">
+        <h1
+          class="font-anton text-yellow-400 uppercase text-xl sm:text-2xl md:text-3xl leading-tight text-balance"
+          tabindex="0">
+          Cherchez parmi plus de 1500 recettes
+          <br />
+          du quotidien, simples et délicieuses
+        </h1>
+
+        <!-- Barre de recherche -->
+        <div
+          class="flex items-stretch gap-2 rounded-lg p-2 w-full bg-white focus:outline-none focus-within:ring ring-yellow-300 h-14 sm:h-16">
+          <label class="sr-only" for="recipes-search">
+            Rechercher une recette
+          </label>
+          <input
+            class="flex-1 px-4 sm:px-6 outline-none text-gray-500 text-sm sm:text-base"
+            type="search"
+            id="recipes-search"
+            placeholder="Rechercher une recette, un ingrédient, ..."
+            data-recipes-search />
+          <button
+            class="w-10 sm:w-12 h-10 sm:h-12 rounded-lg bg-neutral-900 text-white hover:bg-yellow-400 hover:text-neutral-900 transition"
+            aria-label="Lancer la recherche">
+            <svg
+              class="m-auto"
+              width="20"
+              height="20"
+              viewBox="0 0 28 28"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="9.5" stroke="currentColor" />
+              <line
+                x1="18.3536"
+                y1="18.6464"
+                x2="27.3536"
+                y2="27.6464"
+                stroke="currentColor" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Image de fond -->
+      <img
+        class="absolute inset-0 -z-10 w-full h-full object-cover object-center"
+        src="/src/assets/img/hero-background.jpg"
+        alt="Image de fond" />
+    </header>
+  </body>
+</html>
