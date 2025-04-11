@@ -12,7 +12,7 @@
     <link rel="prefetch" href="/src/assets/img/hero-background.jpg" />
     <link rel="stylesheet" href="/src/css/output.css" />
   </head>
-  <body class="bg-neutral-300">
+  <body class="bg-neutral-200">
     <header
       class="relative bg-neutral-900 px-4 sm:px-8 py-12 min-h-[60dvh] text-white isolate grid gap-8 place-items-center text-center overflow-hidden">
       <!-- Logo -->
@@ -84,14 +84,14 @@
     </header>
 
     <!-- Dropdown -->
-    <aside class="p-9">
+    <aside class="px-24 py-8">
       <h2 class="sr-only">Filtres et options</h2>
       <div class="flex flex-col items-center justify-between md:flex-row">
         <div
           class="flex flex-col justify-between sm:flex-row gap-y-2 sm:gap-y-0 gap-x-6 min-w-52">
           <button
             type="button"
-            class="inline-flex items-center justify-center w-full px-3 py-4 bg-white rounded-lg shadow-xs gap-x-14 ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
+            class="inline-flex items-center justify-center w-full px-3 py-4 bg-white rounded-lg shadow-xs gap-x-14 hover:bg-gray-50"
             aria-expanded="true"
             aria-haspopup="true">
             Ingrédients
@@ -109,7 +109,7 @@
           </button>
           <button
             type="button"
-            class="inline-flex items-center justify-center w-full px-3 py-4 bg-white rounded-lg shadow-xs gap-x-14 ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
+            class="inline-flex items-center justify-center w-full px-3 py-4 bg-white rounded-lg shadow-xs gap-x-14 hover:bg-gray-50"
             aria-expanded="true"
             aria-haspopup="true">
             Appareils
@@ -127,7 +127,7 @@
           </button>
           <button
             type="button"
-            class="inline-flex items-center justify-center w-full px-3 py-4 bg-white rounded-lg shadow-xs gap-x-14 ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
+            class="inline-flex items-center justify-center w-full px-3 py-4 bg-white rounded-lg shadow-xs gap-x-14 hover:bg-gray-50"
             aria-expanded="true"
             aria-haspopup="true">
             Ustensiles
@@ -151,7 +151,7 @@
         <li>
           <button
             type="button"
-            class="inline-flex items-center px-3 py-4 mt-3 bg-yellow-400 rounded-lg shadow-xs gap-x-8 ring-1 ring-gray-300 ring-inset"
+            class="inline-flex items-center px-3 py-4 mt-3 bg-yellow-400 rounded-lg shadow-xs gap-x-8"
             aria-expanded="true"
             aria-haspopup="true">
             Crème de coco
@@ -172,5 +172,178 @@
         </li>
       </ul>
     </aside>
+
+    <!-- Cards -->
+    <section class="px-4 py-8 mx-auto mb-12 max-w-7xl">
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Carte 1 -->
+        <article class="relative overflow-hidden bg-white shadow-lg rounded-xl">
+          <!-- Badge Durée -->
+          <span
+            class="absolute self-end inline-block px-2 py-1 text-sm bg-yellow-400 rounded-full top-6 right-5 text-neutral-900">
+            60min
+          </span>
+          <img
+            src="/src/assets/img/Recette01.jpg"
+            alt="Limonade de coco"
+            class="object-cover w-full h-72" />
+
+          <!-- Contenu de la carte -->
+          <div class="flex flex-col gap-4 p-4">
+            <h3 class="text-lg font-bold font-anton">Limonade de coco</h3>
+
+            <p class="text-xs font-semibold tracking-wider text-gray-400">
+              RECETTE
+            </p>
+            <p class="text-sm leading-relaxed text-gray-700">
+              Mettre les glaçons à votre goût dans le blender, ajouter le lait,
+              la crème de coco, le jus de 2 citrons et le sucre. Mixer jusqu'à
+              avoir la consistence désirée.
+            </p>
+
+            <div class="mt-5">
+              <p class="text-xs font-semibold tracking-wider text-gray-400">
+                INGREDIENTS
+              </p>
+            </div>
+            <ul
+              class="grid grid-cols-2 gap-4 space-y-1 text-sm text-gray-600 list-none">
+              <li class="flex flex-col">
+                <strong>Lait de coco</strong>
+                <span class="font-normal text-gray-400">400ml</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Jus de citron</strong>
+                <span class="font-normal text-gray-400">2</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Créme de coco</strong>
+                <span class="font-normal text-gray-400">4 cuillères</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Sucre</strong>
+                <span class="font-normal text-gray-400">20g</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Glaçons</strong>
+                <span class="font-normal text-gray-400">2</span>
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Carte 2 -->
+        <article class="relative overflow-hidden bg-white shadow-lg rounded-xl">
+          <!-- Badge Durée -->
+          <span
+            class="absolute self-end inline-block px-2 py-1 text-sm bg-yellow-400 rounded-full top-6 right-5 text-neutral-900">
+            60min
+          </span>
+          <img
+            src="/src/assets/img/Recette01.jpg"
+            alt="Limonade de coco"
+            class="object-cover w-full h-72" />
+
+          <!-- Contenu de la carte -->
+          <div class="flex flex-col gap-4 p-4">
+            <h3 class="text-lg font-bold font-anton">Limonade de coco</h3>
+
+            <p class="text-xs font-semibold tracking-wider text-gray-400">
+              RECETTE
+            </p>
+            <p class="text-sm leading-relaxed text-gray-700">
+              Mettre les glaçons à votre goût dans le blender, ajouter le lait,
+              la crème de coco, le jus de 2 citrons et le sucre. Mixer jusqu'à
+              avoir la consistence désirée.
+            </p>
+
+            <div class="mt-5">
+              <p class="text-xs font-semibold tracking-wider text-gray-400">
+                INGREDIENTS
+              </p>
+            </div>
+            <ul
+              class="grid grid-cols-2 gap-4 space-y-1 text-sm text-gray-600 list-none">
+              <li class="flex flex-col">
+                <strong>Lait de coco</strong>
+                <span class="font-normal text-gray-400">400ml</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Jus de citron</strong>
+                <span class="font-normal text-gray-400">2</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Créme de coco</strong>
+                <span class="font-normal text-gray-400">4 cuillères</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Sucre</strong>
+                <span class="font-normal text-gray-400">20g</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Glaçons</strong>
+                <span class="font-normal text-gray-400">2</span>
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Carte 3 -->
+        <article class="relative overflow-hidden bg-white shadow-lg rounded-xl">
+          <!-- Badge Durée -->
+          <span
+            class="absolute self-end inline-block px-2 py-1 text-sm bg-yellow-400 rounded-full top-6 right-5 text-neutral-900">
+            60min
+          </span>
+          <img
+            src="/src/assets/img/Recette01.jpg"
+            alt="Limonade de coco"
+            class="object-cover w-full h-72" />
+
+          <!-- Contenu de la carte -->
+          <div class="flex flex-col gap-4 p-4">
+            <h3 class="text-lg font-bold font-anton">Limonade de coco</h3>
+
+            <p class="text-xs font-semibold tracking-wider text-gray-400">
+              RECETTE
+            </p>
+            <p class="text-sm leading-relaxed text-gray-700">
+              Mettre les glaçons à votre goût dans le blender, ajouter le lait,
+              la crème de coco, le jus de 2 citrons et le sucre. Mixer jusqu'à
+              avoir la consistence désirée.
+            </p>
+
+            <div class="mt-5">
+              <p class="text-xs font-semibold tracking-wider text-gray-400">
+                INGREDIENTS
+              </p>
+            </div>
+            <ul
+              class="grid grid-cols-2 gap-4 space-y-1 text-sm text-gray-600 list-none">
+              <li class="flex flex-col">
+                <strong>Lait de coco</strong>
+                <span class="font-normal text-gray-400">400ml</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Jus de citron</strong>
+                <span class="font-normal text-gray-400">2</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Créme de coco</strong>
+                <span class="font-normal text-gray-400">4 cuillères</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Sucre</strong>
+                <span class="font-normal text-gray-400">20g</span>
+              </li>
+              <li class="flex flex-col">
+                <strong>Glaçons</strong>
+                <span class="font-normal text-gray-400">2</span>
+              </li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
   </body>
 </html>
