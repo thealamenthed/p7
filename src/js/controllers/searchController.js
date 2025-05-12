@@ -3,34 +3,14 @@ import {createTagBadge} from "../components/tagBadge.js";
 import {normalize} from "../utils/normalization.js";
 import {filterByTags} from "../services/tagFilter.js";
 
-const cardsContainer = document.querySelector(".grid");
+const cardsContainer = document.querySelector("[data-recipes-list]");
+
 const searchInput = document.querySelector("[data-recipes-search]");
 const filtersContainer = document.querySelector("[data-filters]");
 const selectedTagsContainer = document.querySelector("[data-selected-tags]");
 
 let recipes = [],
   selectedTags = {ingredient: [], appliance: [], ustensil: []};
-
-// Affiche les recettes
-function renderRecipes(list) {
-  cardsContainer.innerHTML = "";
-  list.forEach((r) =>
-    cardsContainer.insertAdjacentHTML("beforeend", RecipeCard(r))
-  );
-}
-
-// Affiche les badges actuels
-function renderSelectedTags() {
-  selectedTagsContainer.innerHTML = "";
-  for (const [type, tags] of Object.entries(selectedTags)) {
-    tags.forEach((tag) => {
-      selectedTagsContainer.insertAdjacentHTML(
-        "beforeend",
-        createTagBadge(tag, type)
-      );
-    });
-  }
-}
 
 // Met à jour résultats texte + tags
 function updateResults() {

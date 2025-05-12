@@ -1,20 +1,19 @@
-// components/tagDropdown.js
+// src/components/tagDropdown.js
 
 /**
- * @param {string} title      — Titre du dropdown ("Ingrédients", etc.)
- * @param {string[]} items    — Liste complète des tags (déjà triée)
- * @param {string} type       — “ingredient” | “appliance” | “ustensil”
- * @param {number} maxVisible — Nombre max d’éléments à afficher (5 par défaut)
+ * @param {string} title
+ * @param {string[]} items
+ * @param {string} type
+ * @param {number} maxVisible
  */
 export function createTagDropdown(title, items, type, maxVisible = 5) {
-  // découpage en deux tableaux
   const visibleItems = items.slice(0, maxVisible);
+  const hiddenItems = items.slice(maxVisible);
 
-  // génération des <li>
   const lisVisible = visibleItems
     .map(
       (item) => `
-    <li class="w-full px-4 py-2 cursor-pointer hover:bg-yellow-400"
+    <li class="px-4 py-2 cursor-pointer hover:bg-yellow-400"
         data-tag="${item}" data-type="${type}">
       ${item}
     </li>
@@ -22,11 +21,21 @@ export function createTagDropdown(title, items, type, maxVisible = 5) {
     )
     .join("");
 
-  // assemblage du HTML du dropdown
+  const lisHidden = hiddenItems
+    .map(
+      (item) => `
+    <li class="hidden px-4 py-2 cursor-pointer hover:bg-yellow-400"
+        data-tag="${item}" data-type="${type}">
+      ${item}
+    </li>
+  `
+    )
+    .join("");
+
   return `
     <div class="max-w-xs mx-auto my-4">
       <details class="relative bg-white rounded-lg shadow-xs group w-48">
-        <summary class="flex items-center justify-between p-4 list-none cursor-pointer gap-x-14">
+        <summary class="flex items-center justify-between p-4 list-none cursor-pointer">
           <span class="capitalize">${title}</span>
           <svg class="w-4 h-4 transition-transform transform group-open:rotate-180"
                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -43,13 +52,14 @@ export function createTagDropdown(title, items, type, maxVisible = 5) {
             </svg>
             <input
               type="search"
+              data-filter-input
+              placeholder="Rechercher ${title.toLowerCase()}"
               class="w-40 py-2 pl-2 pr-8 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-yellow-400"
-              data-filter-input"
             />
           </div>
           <ul class="text-sm text-gray-700" data-filter-list>
             ${lisVisible}
-    
+            ${lisHidden}
           </ul>
         </div>
       </details>

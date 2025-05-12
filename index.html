@@ -92,7 +92,9 @@
           data-filters>
           <!-- Les dropdowns seront injectés ici -->
         </div>
-        <span class="mt-4 font-anton md:mt-0">1500 recettes</span>
+        <span data-recipes-count class="mt-4 font-anton md:mt-0">
+          0 recettes
+        </span>
       </div>
       <!-- Conteneur des badges -->
       <div class="flex flex-wrap gap-2 mt-4" data-selected-tags></div>
@@ -100,7 +102,9 @@
 
     <!-- Section des cards -->
     <section class="px-24 py-8 mx-auto mb-12">
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"></div>
+      <div
+        data-recipes-list
+        class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"></div>
     </section>
     <!-- Load main script -->
     <script type="module" src="/src/js/app.js"></script>

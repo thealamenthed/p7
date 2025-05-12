@@ -1,6 +1,4 @@
 // src/js/app.js
-
-import RecipeCard from "./components/RecipeCard.js";
 import {normalize} from "./utils/normalization.js";
 import {
   getUniqueIngredients,
@@ -8,82 +6,96 @@ import {
   getUniqueUstensils
 } from "./utils/tagUtils.js";
 import {createTagDropdown} from "./components/tagDropdown.js";
-import {createTagBadge} from "./components/tagBadge.js";
 import {filterByTags} from "./services/tagFilter.js";
+import {renderRecipes, renderSelectedTags} from "./controllers/uiController.js";
 
-const cardsContainer = document.querySelector(".grid.grid-cols-1.gap-8");
+const cardsContainer = document.querySelector("[data-recipes-list]");
 const searchInput = document.querySelector("[data-recipes-search]");
 const filtersContainer = document.querySelector("[data-filters]");
 const selectedTagsContainer = document.querySelector("[data-selected-tags]");
+const recipesCountEl = document.querySelector("[data-recipes-count]");
 
 let recipes = [];
 const selectedTags = {ingredient: [], appliance: [], ustensil: []};
 
-function renderRecipes(list) {
-  cardsContainer.innerHTML = "";
-  list.forEach((r) =>
-    cardsContainer.insertAdjacentHTML("beforeend", RecipeCard(r))
-  );
-}
-
-function renderSelectedTags() {
-  selectedTagsContainer.innerHTML = "";
-  Object.entries(selectedTags).forEach(([type, tags]) => {
-    tags.forEach((tag) =>
-      selectedTagsContainer.insertAdjacentHTML(
-        "beforeend",
-        createTagBadge(tag, type)
-      )
-    );
-  });
-}
-
 function updateResults() {
-  const q = normalize(searchInput.value);
-  let results =
+  const rawQuery = searchInput.value.trim();
+  const q = normalize(rawQuery);
+
+  // Recherche principale (texte)
+  const textFiltered =
     q.length >= 3
       ? recipes.filter((r) =>
           (normalize(r.name) + " " + normalize(r.description)).includes(q)
         )
       : [...recipes];
 
-  // applique tous les filtres tags
-  Object.entries(selectedTags).forEach(([type, tags]) => {
-    if (tags.length > 0) results = filterByTags(results, tags, type);
-  });
+  // Application des filtres par tags
+  const tagFiltered = Object.entries(selectedTags).reduce(
+    (acc, [type, tags]) => {
+      return tags.length ? filterByTags(acc, tags, type) : acc;
+    },
+    textFiltered
+  );
 
-  renderRecipes(results);
-  renderSelectedTags();
+  // Mise à jour du compteur
+  const count = tagFiltered.length;
+  recipesCountEl.textContent = `${count} recette${count > 1 ? "s" : ""}`;
+
+  // Aucune recette trouvée
+  if (count === 0 && rawQuery.length > 0) {
+    const suggestion =
+      recipes.length > 0 ? recipes[0].name : "une autre recherche";
+    cardsContainer.innerHTML = `
+      <div class="col-span-full flex justify-center py-8">
+        <p class="text-red-600 text-2xl font-semibold text-center">
+          Aucune recette ne contient « ${rawQuery} » – essayez par exemple : « ${suggestion} »
+        </p>
+      </div>
+    `;
+  } else {
+    renderRecipes(tagFiltered, cardsContainer);
+  }
+
+  renderSelectedTags(selectedTagsContainer, selectedTags);
 }
 
 function initFilterListeners() {
-  // 1) filtrage texte dans chaque dropdown
+  // 1) Recherche live dans chaque dropdown, avec remise à 5 max si vide
   filtersContainer.addEventListener("input", (e) => {
     if (!e.target.matches("[data-filter-input]")) return;
-    const q = e.target.value.toLowerCase();
-    const ul = e.target.closest("div").querySelector("[data-filter-list]");
-    ul.querySelectorAll("li[data-tag]").forEach((li) => {
-      li.style.display = li.textContent.toLowerCase().includes(q) ? "" : "none";
+    const q = e.target.value.trim().toLowerCase();
+    const details = e.target.closest("details");
+    if (!details) return;
+    const list = details.querySelector("[data-filter-list]");
+    if (!list) return;
+
+    const lis = Array.from(list.querySelectorAll("li[data-tag]"));
+    const MAX_VISIBLE = 5;
+
+    if (q === "") {
+      lis.forEach((li, idx) => {
+        li.classList.toggle("hidden", idx >= MAX_VISIBLE);
+      });
+      return;
+    }
+
+    lis.forEach((li) => {
+      const match = li.textContent.toLowerCase().includes(q);
+      li.classList.toggle("hidden", !match);
     });
   });
 
-  // 2) toggle “Voir X de plus / Voir moins”
-  filtersContainer.addEventListener("click", (e) => {
-    const tog = e.target.closest("[data-toggle]");
-    if (!tog) return;
-    const ul = tog.closest("ul");
-    const hiddenLis = ul.querySelectorAll("li.hidden");
-    const showing = tog.textContent.includes("moins");
-    hiddenLis.forEach((li) => li.classList.toggle("hidden", showing));
-    tog.textContent = showing
-      ? `Voir ${hiddenLis.length} de plus`
-      : "Voir moins";
-  });
-
-  // 3) sélection d’un tag dans un dropdown
+  // 2) Sélection d’un tag ET fermeture du dropdown
   filtersContainer.addEventListener("click", (e) => {
     const li = e.target.closest("li[data-tag]");
     if (!li) return;
+
+    // 2.a récupération et fermeture du <details> parent
+    const details = li.closest("details");
+    if (details) details.open = false;
+
+    // 2.b sélection du tag
     const {type, tag} = li.dataset;
     if (!selectedTags[type].includes(tag)) {
       selectedTags[type].push(tag);
@@ -91,7 +103,7 @@ function initFilterListeners() {
     }
   });
 
-  // 4) suppression d’un badge
+  // 3) Suppression d’un badge
   selectedTagsContainer.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-badge]");
     if (!btn) return;
@@ -109,8 +121,8 @@ fetch("/src/js/data/recipes.json")
   })
   .then((data) => {
     recipes = data;
-    renderRecipes(recipes);
-    // injecte les 3 dropdowns dynamiquement
+
+    // injecte les dropdowns
     filtersContainer.innerHTML = [
       createTagDropdown(
         "Ingrédients",
@@ -120,12 +132,52 @@ fetch("/src/js/data/recipes.json")
       createTagDropdown("Appareils", getUniqueAppliances(data), "appliance"),
       createTagDropdown("Ustensiles", getUniqueUstensils(data), "ustensil")
     ].join("");
-    initFilterListeners(); // monte tous les écouteurs
+
+    // monte les écouteurs
+    initFilterListeners();
+
+    // recherche interne dans les dropdowns
+    document.querySelectorAll("[data-filter-input]").forEach((input) => {
+      input.addEventListener("input", (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        const details = e.target.closest("details");
+        if (!details) return;
+        const list = details.querySelector("[data-filter-list]");
+        if (!list) return;
+        list.querySelectorAll("li[data-tag]").forEach((li) => {
+          li.classList.toggle(
+            "hidden",
+            !li.textContent.toLowerCase().includes(query)
+          );
+        });
+      });
+    });
+
+    // → Affiche tout et initialise le compteur au chargement
+    updateResults();
   })
   .catch((err) => {
     console.error("Échec du chargement :", err);
     cardsContainer.innerHTML = `<p class="text-red-600">Erreur de chargement des recettes.</p>`;
   });
 
-// recherche texte
+// recherche texte principale
 searchInput.addEventListener("input", updateResults);
+
+// prise en charge du bouton reset du form
+const searchForm = searchInput.closest("form");
+if (searchForm) {
+  searchForm.addEventListener("reset", () => {
+    setTimeout(updateResults, 0);
+  });
+
+  // ferme tout dropdown <details> si on clique en dehors
+  document.addEventListener("click", (e) => {
+    // si le clic ne se produit pas dans un <details> ni sur un <summary>
+    if (!e.target.closest("details")) {
+      document
+        .querySelectorAll("details[open]")
+        .forEach((d) => (d.open = false));
+    }
+  });
+}
