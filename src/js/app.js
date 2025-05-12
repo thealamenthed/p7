@@ -46,10 +46,16 @@ function updateResults() {
     }
   }
 
-  //  Mise à jour des dropdowns avec les tags disponibles dans les résultats filtrés
-  const ingredients = getUniqueIngredients(results);
-  const appliances = getUniqueAppliances(results);
-  const ustensils = getUniqueUstensils(results);
+  // Mise à jour des dropdowns avec les tags disponibles dans les résultats filtrés
+  const ingredients = getUniqueIngredients(results).filter(
+    (i) => !selectedTags.ingredient.includes(i)
+  );
+  const appliances = getUniqueAppliances(results).filter(
+    (a) => !selectedTags.appliance.includes(a)
+  );
+  const ustensils = getUniqueUstensils(results).filter(
+    (u) => !selectedTags.ustensil.includes(u)
+  );
 
   filtersContainer.innerHTML = [
     createTagDropdown("Ingrédients", ingredients, "ingredient"),
