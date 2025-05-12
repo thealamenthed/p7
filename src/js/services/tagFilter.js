@@ -6,37 +6,13 @@
  * @param {string[]} tags
  * @param {'ingredient'|'appliance'|'ustensil'} type
  */
-export function filterByTagsWithLoops(recipes, tags, type) {
-  const filtered = [];
-
-  for (let i = 0; i < recipes.length; i++) {
-    const r = recipes[i];
+export function filterByTags(recipes, tags, type) {
+  return recipes.filter((r) => {
     let pool = [];
-
-    if (type === "ingredient") {
-      for (let j = 0; j < r.ingredients.length; j++) {
-        pool.push(r.ingredients[j].ingredient.toLowerCase());
-      }
-    } else if (type === "appliance") {
-      pool.push(r.appliance.toLowerCase());
-    } else if (type === "ustensil") {
-      for (let j = 0; j < r.ustensils.length; j++) {
-        pool.push(r.ustensils[j].toLowerCase());
-      }
-    }
-
-    let hasAllTags = true;
-    for (let j = 0; j < tags.length; j++) {
-      if (!pool.includes(tags[j])) {
-        hasAllTags = false;
-        break;
-      }
-    }
-
-    if (hasAllTags) {
-      filtered.push(r);
-    }
-  }
-
-  return filtered;
+    if (type === "ingredient")
+      pool = r.ingredients.map((i) => i.ingredient.toLowerCase());
+    if (type === "appliance") pool = [r.appliance.toLowerCase()];
+    if (type === "ustensil") pool = r.ustensils.map((u) => u.toLowerCase());
+    return tags.every((t) => pool.includes(t));
+  });
 }
