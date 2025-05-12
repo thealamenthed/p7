@@ -6,7 +6,7 @@ import {
   getUniqueUstensils
 } from "./utils/tagUtils.js";
 import {createTagDropdown} from "./components/tagDropdown.js";
-import {filterByTagsWithLoops} from "./services/tagFilter.js";
+import {filterByTags} from "./services/tagFilter.js";
 import {renderRecipes, renderSelectedTags} from "./controllers/uiController.js";
 
 const cardsContainer = document.querySelector("[data-recipes-list]");
@@ -21,9 +21,8 @@ const selectedTags = {ingredient: [], appliance: [], ustensil: []};
 function updateResults() {
   const rawQuery = searchInput.value.trim();
   const q = normalize(rawQuery);
-  let results = [];
 
-  // Recherche principale (texte)
+  // 1. Recherche principale
   const textFiltered =
     q.length >= 3
       ? recipes.filter((r) =>
@@ -31,19 +30,38 @@ function updateResults() {
         )
       : [...recipes];
 
-  // Application des filtres par tags
+  // 2. Filtres par tags
   const tagFiltered = Object.entries(selectedTags).reduce(
-    (acc, [type, tags]) => {
-      return tags.length ? filterByTags(acc, tags, type) : acc;
-    },
+    (acc, [type, tags]) =>
+      tags.length > 0 ? filterByTags(acc, tags, type) : acc,
     textFiltered
   );
 
-  // Mise à jour du compteur
+  // 3. Mise à jour des tags disponibles
+  const ingredients = getUniqueIngredients(tagFiltered).filter(
+    (i) => !selectedTags.ingredient.includes(i)
+  );
+  const appliances = getUniqueAppliances(tagFiltered).filter(
+    (a) => !selectedTags.appliance.includes(a)
+  );
+  const ustensils = getUniqueUstensils(tagFiltered).filter(
+    (u) => !selectedTags.ustensil.includes(u)
+  );
+
+  filtersContainer.innerHTML = [
+    createTagDropdown("Ingrédients", ingredients, "ingredient"),
+    createTagDropdown("Appareils", appliances, "appliance"),
+    createTagDropdown("Ustensiles", ustensils, "ustensil")
+  ].join("");
+
+  // Réactiver les événements sur les nouveaux dropdowns
+  initFilterListeners();
+
+  // 4. Mise à jour du compteur
   const count = tagFiltered.length;
   recipesCountEl.textContent = `${count} recette${count > 1 ? "s" : ""}`;
 
-  // Aucune recette trouvée
+  // 5. Affichage ou message “aucun résultat”
   if (count === 0 && rawQuery.length > 0) {
     const suggestion =
       recipes.length > 0 ? recipes[0].name : "une autre recherche";
@@ -55,7 +73,7 @@ function updateResults() {
       </div>
     `;
   } else {
-    renderRecipes(results, cardsContainer);
+    renderRecipes(tagFiltered, cardsContainer);
   }
 
   // 6. Badges de tags sélectionnés
