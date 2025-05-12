@@ -1,13 +1,13 @@
 // src/js/app.js
-import {normalize} from "./utils/normalization.js";
+
 import {
   getUniqueIngredients,
   getUniqueAppliances,
   getUniqueUstensils
 } from "./utils/tagUtils.js";
 import {createTagDropdown} from "./components/tagDropdown.js";
-import {filterByTags} from "./services/tagFilter.js";
-import {renderRecipes, renderSelectedTags} from "./controllers/uiController.js";
+import {updateResults} from "./controllers/searchWithArrayMethods.js";
+import {enableDropdownKeyboardNavigation} from "./utils/keyboardNavigation.js";
 
 const cardsContainer = document.querySelector("[data-recipes-list]");
 const searchInput = document.querySelector("[data-recipes-search]");
@@ -18,186 +18,115 @@ const recipesCountEl = document.querySelector("[data-recipes-count]");
 let recipes = [];
 const selectedTags = {ingredient: [], appliance: [], ustensil: []};
 
-function updateResults() {
-  const rawQuery = searchInput.value.trim();
-  const q = normalize(rawQuery);
+const getUpdateParams = () => ({
+  searchInput,
+  recipes,
+  selectedTags,
+  filtersContainer,
+  initFilterListeners,
+  cardsContainer,
+  recipesCountEl,
+  selectedTagsContainer
+});
 
-  // 1. Recherche principale
-  const textFiltered =
-    q.length >= 3
-      ? recipes.filter((r) =>
-          (normalize(r.name) + " " + normalize(r.description)).includes(q)
-        )
-      : [...recipes];
-
-  // 2. Filtres par tags
-  const tagFiltered = Object.entries(selectedTags).reduce(
-    (acc, [type, tags]) =>
-      tags.length > 0 ? filterByTags(acc, tags, type) : acc,
-    textFiltered
-  );
-
-  // 3. Mise à jour des tags disponibles
-  const ingredients = getUniqueIngredients(tagFiltered).filter(
-    (i) => !selectedTags.ingredient.includes(i)
-  );
-  const appliances = getUniqueAppliances(tagFiltered).filter(
-    (a) => !selectedTags.appliance.includes(a)
-  );
-  const ustensils = getUniqueUstensils(tagFiltered).filter(
-    (u) => !selectedTags.ustensil.includes(u)
-  );
-
+// Charge les données de recettes depuis le fichier JSON
+function loadRecipes() {
+  fetch("/src/js/data/recipes.json")
+    .then((r) => {
+      if (!r.ok) throw new Error(r.status); // gestion des erreurs HTTP
+      return r.json();
+    })
+    .then((data) => {
+      recipes = data;
+      renderDropdowns(data);
+      initFilterListeners();
+      updateResults(getUpdateParams());
+    })
+    .catch((err) => {
+      console.error("Échec du chargement :", err);
+      cardsContainer.innerHTML = `<p class="text-red-600">Erreur de chargement des recettes.</p>`;
+    });
+}
+// Génère les dropdowns de filtres dynamiquement à partir des données
+function renderDropdowns(data) {
   filtersContainer.innerHTML = [
-    createTagDropdown("Ingrédients", ingredients, "ingredient"),
-    createTagDropdown("Appareils", appliances, "appliance"),
-    createTagDropdown("Ustensiles", ustensils, "ustensil")
+    createTagDropdown("Ingrédients", getUniqueIngredients(data), "ingredient"),
+    createTagDropdown("Appareils", getUniqueAppliances(data), "appliance"),
+    createTagDropdown("Ustensiles", getUniqueUstensils(data), "ustensil")
   ].join("");
-
-  // Réactiver les événements sur les nouveaux dropdowns
-  initFilterListeners();
-
-  // 4. Mise à jour du compteur
-  const count = tagFiltered.length;
-  recipesCountEl.textContent = `${count} recette${count > 1 ? "s" : ""}`;
-
-  // 5. Affichage ou message “aucun résultat”
-  if (count === 0 && rawQuery.length > 0) {
-    const suggestion =
-      recipes.length > 0 ? recipes[0].name : "une autre recherche";
-    cardsContainer.innerHTML = `
-      <div class="col-span-full flex justify-center py-8">
-        <p class="text-red-600 text-2xl font-semibold text-center">
-          Aucune recette ne contient « ${rawQuery} » – essayez par exemple : « ${suggestion} »
-        </p>
-      </div>
-    `;
-  } else {
-    renderRecipes(tagFiltered, cardsContainer);
-  }
-
-  // 6. Badges de tags sélectionnés
-  renderSelectedTags(selectedTagsContainer, selectedTags);
 }
 
-function initFilterListeners() {
-  // 1) Recherche live dans chaque dropdown, avec remise à 5 max si vide
-  filtersContainer.addEventListener("input", (e) => {
-    if (!e.target.matches("[data-filter-input]")) return;
-    const q = e.target.value.trim().toLowerCase();
-    const details = e.target.closest("details");
-    if (!details) return;
-    const list = details.querySelector("[data-filter-list]");
-    if (!list) return;
+// Configure les événements globaux (barre de recherche, reset formulaire, clic en dehors)
+function setupGlobalEvents() {
+  const searchForm = searchInput.closest("form");
 
-    const lis = Array.from(list.querySelectorAll("li[data-tag]"));
-    const MAX_VISIBLE = 5;
-
-    if (q === "") {
-      lis.forEach((li, idx) => {
-        li.classList.toggle("hidden", idx >= MAX_VISIBLE);
-      });
-      return;
-    }
-
-    lis.forEach((li) => {
-      const match = li.textContent.toLowerCase().includes(q);
-      li.classList.toggle("hidden", !match);
-    });
+  searchInput.addEventListener("input", () => {
+    updateResults(getUpdateParams());
   });
 
-  // 2) Sélection d’un tag ET fermeture du dropdown
-  filtersContainer.addEventListener("click", (e) => {
-    const li = e.target.closest("li[data-tag]");
-    if (!li) return;
+  if (searchForm) {
+    searchForm.addEventListener("reset", () => {
+      setTimeout(() => updateResults(getUpdateParams()), 0);
+    });
 
-    // 2.a récupération et fermeture du <details> parent
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("details")) {
+        document
+          .querySelectorAll("details[open]")
+          .forEach((d) => (d.open = false));
+      }
+    });
+  }
+}
+
+// Initialise les événements liés aux filtres (dropdowns)
+function initFilterListeners() {
+  enableDropdownKeyboardNavigation(filtersContainer);
+
+  filtersContainer.addEventListener("input", handleDropdownSearch); // Recherche interne dans un dropdown
+  filtersContainer.addEventListener("click", handleTagSelection); // Clic sur un tag dans un dropdown
+  selectedTagsContainer.addEventListener("click", handleBadgeRemoval); // Clic sur un badge pour supprimer un tag sélectionné
+}
+
+// Recherche dans un dropdown (filtrage local des items)
+function handleDropdownSearch(e) {
+  if (!e.target.matches("[data-filter-input]")) return;
+  const q = e.target.value.trim().toLowerCase();
+  const details = e.target.closest("details");
+  const list = details?.querySelector("[data-filter-list]");
+  const lis = list ? Array.from(list.querySelectorAll("li[data-tag]")) : [];
+
+  const MAX_VISIBLE = 5;
+
+  lis.forEach((li, idx) => {
+    const match = li.textContent.toLowerCase().includes(q);
+    li.classList.toggle("hidden", q ? !match : idx >= MAX_VISIBLE);
+  });
+}
+
+// Gère la sélection d’un tag dans un dropdown
+function handleTagSelection(e) {
+  const li = e.target.closest("li[data-tag]");
+  if (!li) return;
+
+  const {type, tag} = li.dataset;
+  if (!selectedTags[type].includes(tag)) {
+    selectedTags[type].push(tag);
     const details = li.closest("details");
     if (details) details.open = false;
-
-    // 2.b sélection du tag
-    const {type, tag} = li.dataset;
-    if (!selectedTags[type].includes(tag)) {
-      selectedTags[type].push(tag);
-      updateResults();
-    }
-  });
-
-  // 3) Suppression d’un badge
-  selectedTagsContainer.addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-badge]");
-    if (!btn) return;
-    const {type, tag} = btn.dataset;
-    selectedTags[type] = selectedTags[type].filter((t) => t !== tag);
-    updateResults();
-  });
+    updateResults(getUpdateParams());
+  }
 }
 
-// 1 fetch unique pour tout
-fetch("/src/js/data/recipes.json")
-  .then((r) => {
-    if (!r.ok) throw new Error(r.status);
-    return r.json();
-  })
-  .then((data) => {
-    recipes = data;
-
-    // injecte les dropdowns
-    filtersContainer.innerHTML = [
-      createTagDropdown(
-        "Ingrédients",
-        getUniqueIngredients(data),
-        "ingredient"
-      ),
-      createTagDropdown("Appareils", getUniqueAppliances(data), "appliance"),
-      createTagDropdown("Ustensiles", getUniqueUstensils(data), "ustensil")
-    ].join("");
-
-    // monte les écouteurs
-    initFilterListeners();
-
-    // recherche interne dans les dropdowns
-    document.querySelectorAll("[data-filter-input]").forEach((input) => {
-      input.addEventListener("input", (e) => {
-        const query = e.target.value.trim().toLowerCase();
-        const details = e.target.closest("details");
-        if (!details) return;
-        const list = details.querySelector("[data-filter-list]");
-        if (!list) return;
-        list.querySelectorAll("li[data-tag]").forEach((li) => {
-          li.classList.toggle(
-            "hidden",
-            !li.textContent.toLowerCase().includes(query)
-          );
-        });
-      });
-    });
-
-    // Affiche tout et initialise le compteur au chargement
-    updateResults();
-  })
-  .catch((err) => {
-    console.error("Échec du chargement :", err);
-    cardsContainer.innerHTML = `<p class="text-red-600">Erreur de chargement des recettes.</p>`;
-  });
-
-// recherche texte principale
-searchInput.addEventListener("input", updateResults);
-
-// prise en charge du bouton reset du form
-const searchForm = searchInput.closest("form");
-if (searchForm) {
-  searchForm.addEventListener("reset", () => {
-    setTimeout(updateResults, 0);
-  });
-
-  // ferme tout dropdown <details> si on clique en dehors
-  document.addEventListener("click", (e) => {
-    // si le clic ne se produit pas dans un <details> ni sur un <summary>
-    if (!e.target.closest("details")) {
-      document
-        .querySelectorAll("details[open]")
-        .forEach((d) => (d.open = false));
-    }
-  });
+// Supprime un tag (badge) sélectionné
+function handleBadgeRemoval(e) {
+  const btn = e.target.closest("button[data-badge]");
+  if (!btn) return;
+  const {type, tag} = btn.dataset;
+  selectedTags[type] = selectedTags[type].filter((t) => t !== tag);
+  updateResults(getUpdateParams());
 }
+
+// === Initialisation ===
+setupGlobalEvents();
+loadRecipes();
