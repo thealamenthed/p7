@@ -6,7 +6,7 @@ import {
   getUniqueUstensils
 } from "./utils/tagUtils.js";
 import {createTagDropdown} from "./components/tagDropdown.js";
-import {filterByTags} from "./services/tagFilter.js";
+import {filterByTagsWithLoops} from "./services/tagFilter.js";
 import {renderRecipes, renderSelectedTags} from "./controllers/uiController.js";
 
 const cardsContainer = document.querySelector("[data-recipes-list]");
@@ -21,28 +21,50 @@ const selectedTags = {ingredient: [], appliance: [], ustensil: []};
 function updateResults() {
   const rawQuery = searchInput.value.trim();
   const q = normalize(rawQuery);
+  let results = [];
 
-  // Recherche principale (texte)
-  const textFiltered =
-    q.length >= 3
-      ? recipes.filter((r) =>
-          (normalize(r.name) + " " + normalize(r.description)).includes(q)
-        )
-      : [...recipes];
+  // Recherche principale
+  if (q.length >= 3) {
+    for (let i = 0; i < recipes.length; i++) {
+      const r = recipes[i];
+      const fullText = normalize(r.name) + " " + normalize(r.description);
+      if (fullText.includes(q)) {
+        results.push(r);
+      }
+    }
+  } else {
+    for (let i = 0; i < recipes.length; i++) {
+      results.push(recipes[i]);
+    }
+  }
 
-  // Application des filtres par tags
-  const tagFiltered = Object.entries(selectedTags).reduce(
-    (acc, [type, tags]) => {
-      return tags.length ? filterByTags(acc, tags, type) : acc;
-    },
-    textFiltered
-  );
+  // Filtres par tags
+  for (const type in selectedTags) {
+    const tags = selectedTags[type];
+    if (tags.length > 0) {
+      results = filterByTagsWithLoops(results, tags, type);
+    }
+  }
 
-  // Mise à jour du compteur
-  const count = tagFiltered.length;
+  //  Mise à jour des dropdowns avec les tags disponibles dans les résultats filtrés
+  const ingredients = getUniqueIngredients(results);
+  const appliances = getUniqueAppliances(results);
+  const ustensils = getUniqueUstensils(results);
+
+  filtersContainer.innerHTML = [
+    createTagDropdown("Ingrédients", ingredients, "ingredient"),
+    createTagDropdown("Appareils", appliances, "appliance"),
+    createTagDropdown("Ustensiles", ustensils, "ustensil")
+  ].join("");
+
+  // Réactiver les listeners pour les nouveaux éléments
+  initFilterListeners();
+
+  // Mise à jour compteur
+  const count = results.length;
   recipesCountEl.textContent = `${count} recette${count > 1 ? "s" : ""}`;
 
-  // Aucune recette trouvée
+  // Aucune recette
   if (count === 0 && rawQuery.length > 0) {
     const suggestion =
       recipes.length > 0 ? recipes[0].name : "une autre recherche";
@@ -54,7 +76,7 @@ function updateResults() {
       </div>
     `;
   } else {
-    renderRecipes(tagFiltered, cardsContainer);
+    renderRecipes(results, cardsContainer);
   }
 
   renderSelectedTags(selectedTagsContainer, selectedTags);
@@ -153,7 +175,7 @@ fetch("/src/js/data/recipes.json")
       });
     });
 
-    // → Affiche tout et initialise le compteur au chargement
+    // Affiche tout et initialise le compteur au chargement
     updateResults();
   })
   .catch((err) => {
