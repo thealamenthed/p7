@@ -23,48 +23,27 @@ function updateResults() {
   const q = normalize(rawQuery);
   let results = [];
 
-  // Recherche principale
-  if (q.length >= 3) {
-    for (let i = 0; i < recipes.length; i++) {
-      const r = recipes[i];
-      const fullText = normalize(r.name) + " " + normalize(r.description);
-      if (fullText.includes(q)) {
-        results.push(r);
-      }
-    }
-  } else {
-    for (let i = 0; i < recipes.length; i++) {
-      results.push(recipes[i]);
-    }
-  }
+  // Recherche principale (texte)
+  const textFiltered =
+    q.length >= 3
+      ? recipes.filter((r) =>
+          (normalize(r.name) + " " + normalize(r.description)).includes(q)
+        )
+      : [...recipes];
 
-  // Filtres par tags
-  for (const type in selectedTags) {
-    const tags = selectedTags[type];
-    if (tags.length > 0) {
-      results = filterByTagsWithLoops(results, tags, type);
-    }
-  }
+  // Application des filtres par tags
+  const tagFiltered = Object.entries(selectedTags).reduce(
+    (acc, [type, tags]) => {
+      return tags.length ? filterByTags(acc, tags, type) : acc;
+    },
+    textFiltered
+  );
 
-  //  Mise à jour des dropdowns avec les tags disponibles dans les résultats filtrés
-  const ingredients = getUniqueIngredients(results);
-  const appliances = getUniqueAppliances(results);
-  const ustensils = getUniqueUstensils(results);
-
-  filtersContainer.innerHTML = [
-    createTagDropdown("Ingrédients", ingredients, "ingredient"),
-    createTagDropdown("Appareils", appliances, "appliance"),
-    createTagDropdown("Ustensiles", ustensils, "ustensil")
-  ].join("");
-
-  // Réactiver les listeners pour les nouveaux éléments
-  initFilterListeners();
-
-  // Mise à jour compteur
-  const count = results.length;
+  // Mise à jour du compteur
+  const count = tagFiltered.length;
   recipesCountEl.textContent = `${count} recette${count > 1 ? "s" : ""}`;
 
-  // Aucune recette
+  // Aucune recette trouvée
   if (count === 0 && rawQuery.length > 0) {
     const suggestion =
       recipes.length > 0 ? recipes[0].name : "une autre recherche";
@@ -79,6 +58,7 @@ function updateResults() {
     renderRecipes(results, cardsContainer);
   }
 
+  // 6. Badges de tags sélectionnés
   renderSelectedTags(selectedTagsContainer, selectedTags);
 }
 
