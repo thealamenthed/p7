@@ -1,4 +1,4 @@
-import RecipeCard from "../components/RecipeCard.js";
+import RecipeCard from "../components/recipeCard.js";
 import {createTagBadge} from "../components/tagBadge.js";
 
 export function renderRecipes(list, container) {
