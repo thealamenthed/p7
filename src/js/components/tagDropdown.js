@@ -13,7 +13,7 @@ export function createTagDropdown(title, items, type, maxVisible = 5) {
   const lisVisible = visibleItems
     .map(
       (item) => `
-    <li class="px-4 py-2 cursor-pointer hover:bg-yellow-400"
+    <li tabindex="0" class="px-4 py-2 cursor-pointer hover:bg-yellow-400"
         data-tag="${item}" data-type="${type}">
       ${item}
     </li>
@@ -24,7 +24,7 @@ export function createTagDropdown(title, items, type, maxVisible = 5) {
   const lisHidden = hiddenItems
     .map(
       (item) => `
-    <li class="hidden px-4 py-2 cursor-pointer hover:bg-yellow-400"
+    <li tabindex="0" class="hidden px-4 py-2 cursor-pointer hover:bg-yellow-400"
         data-tag="${item}" data-type="${type}">
       ${item}
     </li>
