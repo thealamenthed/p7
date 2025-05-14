@@ -45,3 +45,11 @@ html {
   font-family: "Anton", sans-serif;
   font-weight: 400;
 }
+
+li[data-tag].highlighted {
+  background-color: #fdc700;
+}
+
+li[data-tag]:focus {
+  background-color: #fdc700;
+}

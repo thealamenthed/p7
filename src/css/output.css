@@ -711,6 +711,10 @@ video {
   -webkit-line-clamp: 4;
 }
 
+.block {
+  display: block;
+}
+
 .inline-block {
   display: inline-block;
 }
@@ -1214,6 +1218,14 @@ html {
 .font-anton {
   font-family: "Anton", sans-serif;
   font-weight: 400;
+}
+
+li[data-tag].highlighted {
+  background-color: #fdc700;
+}
+
+li[data-tag]:focus {
+  background-color: #fdc700;
 }
 
 .focus-within\:ring:focus-within {
