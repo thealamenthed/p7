@@ -6,14 +6,13 @@
 
 ## 🚀 Présentation
 
-Après des années d’édition de livres de cuisine, l’entreprise se digitalise avec un site de recettes événementiel. Ce projet front-end, réalisé à partir d’un fichier JSON de 50 recettes et d’une maquette Figma, propose :
-
-- Intégration de la maquette UI responsive avec **Tailwind CSS** - [Voir la maquette Figma](https://www.figma.com/design/LY5VQTAqnrAf0bWObOBrt8/Les-petits-plats---Maquette-2.0?node-id=92391-1638&t=yVtZDNCPVTnvnngb-0)
+Après des années d’édition de livres de cuisine, l’entreprise se digitalise avec un site de recettes. Ce projet front-end, réalisé à partir d’un fichier JSON de 50 recettes et d’une maquette Figma, propose :
 
 - Recherche principale texte (≥ 3 caractères)
 - Filtres dynamiques par **ingrédients**, **appareils** et **ustensiles**
 - Suppression automatique des tags sélectionnés
 - Navigation clavier (flèches + Entrée)
+- UI responsive avec **Tailwind CSS** - [Voir la maquette Figma](https://www.figma.com/design/LY5VQTAqnrAf0bWObOBrt8/Les-petits-plats---Maquette-2.0?node-id=92391-1638&t=yVtZDNCPVTnvnngb-0)
 
 Deux implémentations de l’algorithme de recherche ont été développées :
 
