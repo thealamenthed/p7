@@ -12,7 +12,8 @@ Après des années d’édition de livres de cuisine, l’entreprise se digitali
 - Filtres dynamiques par **ingrédients**, **appareils** et **ustensiles**
 - Suppression automatique des tags sélectionnés
 - Navigation clavier (flèches + Entrée)
-- UI responsive avec **Tailwind CSS** - [Voir la maquette Figma](https://www.figma.com/design/LY5VQTAqnrAf0bWObOBrt8/Les-petits-plats---Maquette-2.0?node-id=92391-1638&t=yVtZDNCPVTnvnngb-0)
+- UI responsive avec **Tailwind CSS**
+[Voir la maquette Figma](https://www.figma.com/design/LY5VQTAqnrAf0bWObOBrt8/Les-petits-plats---Maquette-2.0?node-id=92391-1638&t=yVtZDNCPVTnvnngb-0)
 
 Deux implémentations de l’algorithme de recherche ont été développées :
 
