@@ -48,7 +48,8 @@ Un benchmark via [Jsben.ch](https://jsben.ch) sur 1000 recettes simulées a perm
 ---
 
 ## ⚙️ Structure du projet
-   ```bash
+
+```bash
 src/
 ├── assets/ # Images et icônes
 ├── css/ # Styles (Tailwind output)
@@ -63,7 +64,7 @@ src/
 │ └── utils/ # Helpers (normalize, tagUtils)
 └── data/ # recipes.json
 
-   ```
+```
 
 ---
 
@@ -76,13 +77,17 @@ src/
 ### Basculer entre les branches
 
 Pour comparer les deux implémentations, utilisez les branches Git dédiées :
-   ```
+
+```
 git checkout feat/search-with-loops # version avec boucles natives
-   ```
+```
+
 # ou
-   ```
+
+```
 git checkout feat/search-with-array-methods # version fonctionnelle
-   ```
+```
+
 ## 📊 Benchmark
 
 ### Implémentation
