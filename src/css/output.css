@@ -759,6 +759,10 @@ video {
   height: 100%;
 }
 
+.max-h-40 {
+  max-height: 10rem;
+}
+
 .min-h-\[60dvh\] {
   min-height: 60dvh;
 }
@@ -898,6 +902,10 @@ video {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
 }
 
 .text-balance {
