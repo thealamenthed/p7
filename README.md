@@ -94,12 +94,10 @@ git checkout feat/search-with-array-methods # version fonctionnelle
 
 | Méthode                     | Ops/sec (moyenne) |
 | --------------------------- | ----------------- |
-| Boucles natives             | ~7 750            |
-| Programmation fonctionnelle | ~7 780            |
+| Boucles natives             | ~323 506          |
+| Programmation fonctionnelle | ~337 290          |
 
-🎯 **Conclusion** : Les performances sont quasi-identiques
-
-✅ La version **fonctionnelle** est recommandée pour sa **lisibilité** et sa **maintenabilité**
+🎯 **Conclusion** : La version fonctionnelle se détache, elle est recommandée pour sa **lisibilité** et sa **maintenabilité**
 
 ## 🛠️ Développement
 
