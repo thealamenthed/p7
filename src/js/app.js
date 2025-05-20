@@ -60,15 +60,24 @@ function renderDropdowns(data) {
 function setupGlobalEvents() {
   const searchForm = searchInput.closest("form");
 
+  // Recherche live à chaque saisie (optionnel si tu veux du "live search")
   searchInput.addEventListener("input", () => {
     updateResults(getUpdateParams());
   });
 
   if (searchForm) {
+    // Capter le submit du formulaire (Entrée ou click sur la loupe)
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault(); // Empêche le rechargement de la page
+      updateResults(getUpdateParams());
+    });
+
+    // Reset du formulaire
     searchForm.addEventListener("reset", () => {
       setTimeout(() => updateResults(getUpdateParams()), 0);
     });
 
+    // Fermeture des dropdowns quand on clique en dehors
     document.addEventListener("click", (e) => {
       if (!e.target.closest("details")) {
         document
