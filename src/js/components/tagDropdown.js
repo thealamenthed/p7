@@ -4,11 +4,10 @@
  * @param {string} title
  * @param {string[]} items
  * @param {string} type
- * @param {number} maxVisible
  */
-export function createTagDropdown(title, items, type, maxVisible = 5) {
-  const visibleItems = items.slice(0, maxVisible);
-  const hiddenItems = items.slice(maxVisible);
+export function createTagDropdown(title, items, type) {
+  const visibleItems = items.slice(0);
+  const hiddenItems = items.slice();
 
   const lisVisible = visibleItems
     .map(
@@ -57,7 +56,7 @@ export function createTagDropdown(title, items, type, maxVisible = 5) {
               class="w-40 py-2 pl-2 pr-8 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
           </div>
-          <ul class="text-sm text-gray-700" data-filter-list>
+          <ul class="text-sm text-gray-700 max-h-40 overflow-y-auto" data-filter-list >
             ${lisVisible}
             ${lisHidden}
           </ul>
