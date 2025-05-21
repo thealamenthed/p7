@@ -20,7 +20,7 @@ Deux implémentations de l’algorithme de recherche ont été développées :
 1. **Boucles natives** (`for`, `while`)
 2. **Programmation fonctionnelle** (`filter`, `map`)
 
-Un benchmark via [Jsben.ch](https://jsben.ch) sur 1000 recettes simulées a permis de comparer leurs performances.
+Un benchmark via [Jsben.ch](https://jsben.ch) sur 50 recettes simulées a permis de comparer leurs performances.
 
 ---
 
