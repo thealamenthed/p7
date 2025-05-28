@@ -6,21 +6,21 @@
 
 ## 🚀 Présentation
 
-Après des années d’édition de livres de cuisine, l’entreprise se digitalise avec un site de recettes événementiel. Ce projet front-end, réalisé à partir d’un fichier JSON de 50 recettes et d’une maquette Figma, propose :
-
-- Intégration de la maquette UI responsive avec **Tailwind CSS** - [Voir la maquette Figma](https://www.figma.com/design/LY5VQTAqnrAf0bWObOBrt8/Les-petits-plats---Maquette-2.0?node-id=92391-1638&t=yVtZDNCPVTnvnngb-0)
+Après des années d’édition de livres de cuisine, l’entreprise se digitalise avec un site de recettes. Ce projet front-end, réalisé à partir d’un fichier JSON de 50 recettes et d’une maquette Figma, propose :
 
 - Recherche principale texte (≥ 3 caractères)
 - Filtres dynamiques par **ingrédients**, **appareils** et **ustensiles**
 - Suppression automatique des tags sélectionnés
 - Navigation clavier (flèches + Entrée)
+- UI responsive avec **Tailwind CSS**
+[Voir la maquette Figma](https://www.figma.com/design/LY5VQTAqnrAf0bWObOBrt8/Les-petits-plats---Maquette-2.0?node-id=92391-1638&t=yVtZDNCPVTnvnngb-0)
 
 Deux implémentations de l’algorithme de recherche ont été développées :
 
 1. **Boucles natives** (`for`, `while`)
 2. **Programmation fonctionnelle** (`filter`, `map`)
 
-Un benchmark via [Jsben.ch](https://jsben.ch) sur 1000 recettes simulées a permis de comparer leurs performances.
+Un benchmark via [Jsben.ch](https://jsben.ch) sur 50 recettes simulées a permis de comparer leurs performances.
 
 ---
 
@@ -48,7 +48,8 @@ Un benchmark via [Jsben.ch](https://jsben.ch) sur 1000 recettes simulées a perm
 ---
 
 ## ⚙️ Structure du projet
-   ```bash
+
+```bash
 src/
 ├── assets/ # Images et icônes
 ├── css/ # Styles (Tailwind output)
@@ -63,7 +64,7 @@ src/
 │ └── utils/ # Helpers (normalize, tagUtils)
 └── data/ # recipes.json
 
-   ```
+```
 
 ---
 
@@ -76,25 +77,27 @@ src/
 ### Basculer entre les branches
 
 Pour comparer les deux implémentations, utilisez les branches Git dédiées :
-   ```
+
+```
 git checkout feat/search-with-loops # version avec boucles natives
-   ```
+```
+
 # ou
-   ```
+
+```
 git checkout feat/search-with-array-methods # version fonctionnelle
-   ```
+```
+
 ## 📊 Benchmark
 
 ### Implémentation
 
 | Méthode                     | Ops/sec (moyenne) |
 | --------------------------- | ----------------- |
-| Boucles natives             | ~7 750            |
-| Programmation fonctionnelle | ~7 780            |
+| Boucles natives             | ~323 506          |
+| Programmation fonctionnelle | ~337 290          |
 
-🎯 **Conclusion** : Les performances sont quasi-identiques
-
-✅ La version **fonctionnelle** est recommandée pour sa **lisibilité** et sa **maintenabilité**
+🎯 **Conclusion** : La version fonctionnelle se détache, elle est recommandée pour sa **lisibilité** et sa **maintenabilité**
 
 ## 🛠️ Développement
 
