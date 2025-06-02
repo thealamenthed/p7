@@ -4,7 +4,7 @@ import {normalize} from "../utils/normalization.js";
 import {getUniqueIngredients, getUniqueAppliances, getUniqueUstensils} from "../utils/tagUtils.js";
 import {createTagDropdown} from "../components/tagDropdown.js";
 import {filterByTags} from "../services/tagFilter.js";
-import {renderRecipes, renderSelectedTags} from "./uiController.js";
+import {renderRecipes, renderSelectedTags} from "../views.js/uiController.js";
 
 export function updateResults({
   searchInput,

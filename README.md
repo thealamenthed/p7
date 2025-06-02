@@ -56,9 +56,9 @@ src/
 ├── js/
 │ ├── app.js # Point d’entrée
 │ ├── controllers/
-│ │ ├── uiController.js # Affichage cartes & badges
-│ │ ├── searchWithLoops.js # Recherche avec boucles
 │ │ └── search.js # Recherche fonctionnelle
+│ ├── views/
+│ │ └── uiController.js # Affichage cartes & badges
 │ ├── components/ # UI (cards, dropdowns, badges)
 │ ├── services/ # Filtrage tags
 │ └── utils/ # Helpers (normalize, tagUtils)
