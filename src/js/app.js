@@ -1,12 +1,8 @@
 // src/js/app.js
 
-import {
-  getUniqueIngredients,
-  getUniqueAppliances,
-  getUniqueUstensils
-} from "./utils/tagUtils.js";
+import {getUniqueIngredients, getUniqueAppliances, getUniqueUstensils} from "./utils/tagUtils.js";
 import {createTagDropdown} from "./components/tagDropdown.js";
-import {updateResults} from "./controllers/searchWithArrayMethods.js";
+import {updateResults} from "./controllers/search.js";
 import {enableDropdownKeyboardNavigation} from "./utils/keyboardNavigation.js";
 
 const cardsContainer = document.querySelector("[data-recipes-list]");
@@ -80,9 +76,7 @@ function setupGlobalEvents() {
     // Fermeture des dropdowns quand on clique en dehors
     document.addEventListener("click", (e) => {
       if (!e.target.closest("details")) {
-        document
-          .querySelectorAll("details[open]")
-          .forEach((d) => (d.open = false));
+        document.querySelectorAll("details[open]").forEach((d) => (d.open = false));
       }
     });
   }

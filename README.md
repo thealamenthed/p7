@@ -13,7 +13,7 @@ Après des années d’édition de livres de cuisine, l’entreprise se digitali
 - Suppression automatique des tags sélectionnés
 - Navigation clavier (flèches + Entrée)
 - UI responsive avec **Tailwind CSS**
-[Voir la maquette Figma](https://www.figma.com/design/LY5VQTAqnrAf0bWObOBrt8/Les-petits-plats---Maquette-2.0?node-id=92391-1638&t=yVtZDNCPVTnvnngb-0)
+  [Voir la maquette Figma](https://www.figma.com/design/LY5VQTAqnrAf0bWObOBrt8/Les-petits-plats---Maquette-2.0?node-id=92391-1638&t=yVtZDNCPVTnvnngb-0)
 
 Deux implémentations de l’algorithme de recherche ont été développées :
 
@@ -58,7 +58,7 @@ src/
 │ ├── controllers/
 │ │ ├── uiController.js # Affichage cartes & badges
 │ │ ├── searchWithLoops.js # Recherche avec boucles
-│ │ └── searchWithArrayMethods.js # Recherche fonctionnelle
+│ │ └── search.js # Recherche fonctionnelle
 │ ├── components/ # UI (cards, dropdowns, badges)
 │ ├── services/ # Filtrage tags
 │ └── utils/ # Helpers (normalize, tagUtils)
